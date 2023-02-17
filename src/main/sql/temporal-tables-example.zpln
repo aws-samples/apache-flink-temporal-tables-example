@@ -1,0 +1,326 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%flink.conf\nexecution.checkpointing.interval 60000",
+      "user": "anonymous",
+      "dateUpdated": "2023-02-01T15:33:25+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1675194866798_414152956",
+      "id": "paragraph_1675194866798_414152956",
+      "dateCreated": "2023-01-31T19:54:26+0000",
+      "dateStarted": "2023-02-01T14:39:08+0000",
+      "dateFinished": "2023-02-01T14:39:08+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:42324"
+    },
+    {
+      "title": "Ensure you modify line 2 here to copy / paste your Kafka Bootstrap Server String",
+      "text": "%flink\nval brokers = \"Bootstrap_Brokers_Go_Here\"\nz.put(\"brokers\", brokers)",
+      "user": "anonymous",
+      "dateUpdated": "2023-02-01T17:47:59+0000",
+      "progress": 0,
+      "config": {
+        "lineNumbers": true,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1675261282546_2111993286",
+      "id": "paragraph_1675261282546_2111993286",
+      "dateCreated": "2023-02-01T14:21:22+0000",
+      "dateStarted": "2023-02-01T17:47:59+0000",
+      "dateFinished": "2023-02-01T17:48:01+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:42325"
+    },
+    {
+      "title": "Create Tables and Data Generation",
+      "text": "%flink.ssql(type=update, interpolate=true)\nDROP TABLE IF EXISTS stock;\nDROP TABLE IF EXISTS stock_datagen;\nDROP TABLE IF EXISTS transactions;\nDROP TABLE IF EXISTS transactions_datagen;\nDROP TABLE IF EXISTS output;\n\nCREATE TABLE IF NOT EXISTS stock ( \n    ticker_symbol STRING NOT NULL PRIMARY KEY,\n    price DOUBLE,\n    s_timestamp TIMESTAMP_LTZ(3),\n    WATERMARK FOR s_timestamp AS s_timestamp\n) WITH (\n  'connector' = 'upsert-kafka',\n  'topic' = 'stock-topic',\n  'properties.bootstrap.servers' = '{brokers}',\n  'key.format' = 'raw',\n  'value.format' = 'json'\n);\n\n\nCREATE TABLE IF NOT EXISTS transactions ( \n    id STRING,\n    transaction_ticker_symbol STRING,\n    shares_purchased DOUBLE,\n    t_timestamp TIMESTAMP_LTZ(3),\n    WATERMARK FOR t_timestamp AS t_timestamp\n) WITH (\n  'connector' = 'kafka',\n  'topic' = 'transaction-topic',\n  'properties.bootstrap.servers' = '{brokers}',\n  'value.format' = 'json'\n);\n\nCREATE TABLE IF NOT EXISTS stock_datagen\nWITH (\n    'connector' = 'datagen',\n    'rows-per-second' = '1',\n    'fields.ticker_symbol.length' = '2',\n    'fields.price.min' = '0.00',\n    'fields.price.max' = '10000.00'\n   -- 'fields.s_timestamp.max-past' = '150000' -- only in 1.15 > \n    )\n    LIKE stock (EXCLUDING ALL);\n    \nCREATE TABLE IF NOT EXISTS transactions_datagen\nWITH (\n    'connector' = 'datagen',\n    'rows-per-second' = '1000',\n    'fields.transaction_ticker_symbol.length' = '2',\n    'fields.shares_purchased.min' = '1',\n    'fields.shares_purchased.max' = '100'\n   -- 'fields.t_timestamp.max-past' = '30000' -- only in 1.15 > \n    )\n    LIKE transactions (EXCLUDING ALL);\n    \nCREATE TABLE IF NOT EXISTS output (\n    data STRING\n    ) WITH (\n  'connector' = 'kafka',\n  'topic' = 'output',\n  'properties.bootstrap.servers' = '{brokers}',\n  'value.format' = 'json',\n  'format' = 'raw')",
+      "user": "anonymous",
+      "dateUpdated": "2023-02-01T17:39:10+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1675194913020_1463312600",
+      "id": "paragraph_1675194913020_1463312600",
+      "dateCreated": "2023-01-31T19:55:13+0000",
+      "dateStarted": "2023-02-01T17:39:10+0000",
+      "dateFinished": "2023-02-01T17:39:28+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:42326"
+    },
+    {
+      "title": "Insert Data Generation Into Stock Topic",
+      "text": "%flink.ssql(type=update)\nINSERT INTO STOCK SELECT * FROM STOCK_DATAGEN;\n",
+      "user": "anonymous",
+      "dateUpdated": "2023-02-01T17:41:30+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "/flinkdashboard/#/job/52d378b21875fee0cdf7da81565218b0",
+              "$$hashKey": "object:42637"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1675194997237_1640120303",
+      "id": "paragraph_1675194997237_1640120303",
+      "dateCreated": "2023-01-31T19:56:37+0000",
+      "dateStarted": "2023-02-01T17:41:30+0000",
+      "dateFinished": "2023-02-01T17:47:27+0000",
+      "status": "ABORT",
+      "$$hashKey": "object:42327"
+    },
+    {
+      "title": "Insert Data Generation into Transactions Topic",
+      "text": "%flink.ssql(type=update)\nINSERT INTO TRANSACTIONS SELECT * FROM TRANSACTIONS_DATAGEN;\n",
+      "user": "anonymous",
+      "dateUpdated": "2023-02-01T17:41:32+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "/flinkdashboard/#/job/c36d556c9ef5123536c57de3a42e78c9",
+              "$$hashKey": "object:42685"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1675195021564_1128807345",
+      "id": "paragraph_1675195021564_1128807345",
+      "dateCreated": "2023-01-31T19:57:01+0000",
+      "dateStarted": "2023-02-01T17:41:33+0000",
+      "dateFinished": "2023-02-01T17:47:22+0000",
+      "status": "ABORT",
+      "$$hashKey": "object:42328"
+    },
+    {
+      "title": "Perform Temporal Table Join",
+      "text": "%flink.ssql(type=update)\nSELECT \n     id,\n     price,\n     transaction_ticker_symbol,\n     shares_purchased,\n     t_timestamp\nFROM transactions\nLEFT JOIN stock FOR SYSTEM_TIME AS OF transactions.t_timestamp\nON transactions.transaction_ticker_symbol = stock.ticker_symbol\nWHERE ticker_symbol IS NOT NULL;",
+      "user": "anonymous",
+      "dateUpdated": "2023-02-01T17:46:26+0000",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "price": "string",
+                      "transaction_ticker_symbol": "string",
+                      "shares_purchased": "string",
+                      "t_timestamp": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          },
+          "2": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {}
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "FLINK JOB",
+          "tooltip": "View in Flink web UI",
+          "group": "flink",
+          "values": [
+            {
+              "jobUrl": "/flinkdashboard/#/job/887ed0f3247eecebec7aa15f309d5395",
+              "$$hashKey": "object:42733"
+            }
+          ],
+          "interpreterSettingId": "flink"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1675195029865_1923110608",
+      "id": "paragraph_1675195029865_1923110608",
+      "dateCreated": "2023-01-31T19:57:09+0000",
+      "dateStarted": "2023-02-01T17:46:26+0000",
+      "dateFinished": "2023-02-01T17:47:19+0000",
+      "status": "ABORT",
+      "$$hashKey": "object:42329"
+    }
+  ],
+  "name": "temporal-tables-example",
+  "id": "2HSN4X33M",
+  "defaultInterpreterGroup": "flink",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/temporal-tables-example"
+}
