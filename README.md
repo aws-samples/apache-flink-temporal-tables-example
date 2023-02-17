@@ -100,7 +100,7 @@ Each with 3 partitions and a replication factor of 3
 
 - Next, run the DatagenJob.java class found in `src/main/java/temporal.tables/` to begin generating data into your `stock-topic` and `transaction-topic` topics. 
 
-Note: [Running from IntelliJ is simple to setup and has many plugins for running Apache Flink](https://catalog.us-east-1.prod.workshops.aws/workshops/429cec9e-3222-4943-82f7-1f45c45ed99a/en-US)
+Note: [Running from IntelliJ is simple to set up](https://catalog.us-east-1.prod.workshops.aws/workshops/429cec9e-3222-4943-82f7-1f45c45ed99a/en-US/1-localdev) and has many plugins for running Apache Flink
 
 - Finally, run the DataStreamJob.java class found in `src/main/java/temporal.tables` to run  your temporal table join of the two topics and write them out to the `output` topic. 
 
