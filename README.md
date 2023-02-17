@@ -66,7 +66,7 @@ To start using this example, you will need to install some prerequisites locally
 - Clone this git repository to your local machine.
 
 ```bash
-git clone <<git-repo>>
+git clone git@github.com:aws-samples/apache-flink-temporal-tables-example.git
 ```
 - Once in the project root, open a terminal session and navigate to the src/main/supplemental-resources page.
 
