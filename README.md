@@ -128,10 +128,11 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic output
 ### Deploying and Running on KDA
 
 In order to run this example on KDA, you will first need to [create an MSK Cluster], and then create the KDA application within the same VPC. Ensure that you have the right networking setup so that KDA can connect to MSK.
-=======
-  <iframe src="https://gitlab.aws.dev/jdber/temporal-table-function-kda/-/raw/main/src/main/supplemental-resources/temporal-tables.mp4" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
-<!-- blank line -->
+
+
+
+https://user-images.githubusercontent.com/74626212/219805515-0f692993-6132-4cc6-a1b4-6a50eb1c1a56.mp4
+
 
 
 ### To deploy onto Kinesis Data Analytics for Apache Flink
