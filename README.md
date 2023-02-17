@@ -116,12 +116,8 @@ When run locally, you can view this running job at https://localhost:8081.
 kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic output
 ```
 
-<!-- blank line -->
-<figure class="video_container">
-  <video controls="true" allowfullscreen="true" poster="path/to/poster_image.png">
-    <source src="/src/main/supplemental-resources/temporal-tables.mp4" type="video/mp4">
-  </video>
-</figure>
+
+https://user-images.githubusercontent.com/74626212/219805515-0f692993-6132-4cc6-a1b4-6a50eb1c1a56.mp4
 
 
 
@@ -130,8 +126,6 @@ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic output
 In order to run this example on KDA, you will first need to [create an MSK Cluster], and then create the KDA application within the same VPC. Ensure that you have the right networking setup so that KDA can connect to MSK.
 
 
-
-https://user-images.githubusercontent.com/74626212/219805515-0f692993-6132-4cc6-a1b4-6a50eb1c1a56.mp4
 
 
 
