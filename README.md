@@ -123,7 +123,7 @@ https://user-images.githubusercontent.com/74626212/219805515-0f692993-6132-4cc6-
 
 ### Deploying and Running on KDA
 
-In order to run this example on KDA, you will first need to [create an MSK Cluster](https://docs.aws.amazon.com/msk/latest/developerguide/create-cluster.html), and then (create the KDA application within the same VPC)[https://docs.aws.amazon.com/kinesisanalytics/latest/java/example-msk.html#example-msk-create]. [Ensure that you have the right networking setup so that KDA can connect to MSK](https://docs.aws.amazon.com/kinesisanalytics/latest/java/vpc.html).
+In order to run this example on KDA, you will first need to [create an MSK Cluster](https://docs.aws.amazon.com/msk/latest/developerguide/create-cluster.html), and then [create the KDA application within the same VPC](https://docs.aws.amazon.com/kinesisanalytics/latest/java/example-msk.html#example-msk-create). [Ensure that you have the right networking setup so that KDA can connect to MSK](https://docs.aws.amazon.com/kinesisanalytics/latest/java/vpc.html).
 
 
 
